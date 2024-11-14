@@ -49,14 +49,13 @@ jobs:
       - name: Build the backend
         env:
           USERNAME: ${{ github.actor }}
-          PASSWORD: ${{ secrets.PASSWORD }}
+          PASSWORD: ${{ github.token }}
         run: mvn -U -B -e clean verify  -f backend/pom.xml --settings settings.xml
 
       - name: Publish the backend
         if: startsWith(github.ref, 'refs/tags/v')
         env:
           USERNAME: ${{ github.actor }}
-          PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PASSWORD: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: mvn -B deploy -DskipTests --settings settings.xml
-
