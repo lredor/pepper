@@ -1,0 +1,4 @@
+#!/bin/sh
+
+VERSION="$1"
+mvn versions:set -DgroupId=org.eclipse.sirius -DartifactId="*" -DoldVersion="*" -DnewVersion="$VERSION" -f packages/pom.xml
