@@ -45,6 +45,20 @@ jobs:
       - name: Setup some global environment variables
         run: |
           echo "git_describe=$(git describe)" >> $GITHUB_ENV
+          echo "app_version_latest=$(grep version frontend/package.json | awk -F \" '{print $4}')" >> $GITHUB_ENV
+
+      - name: Build the frontend packages
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=${{ github.token }}" >> .npmrc
+          echo "CI=true" >> $GITHUB_ENV
+          npm ci
+          npm run build
+        working-directory: frontend
+
+      - name: Copy frontend artifacts
+        run: |
+          mkdir -p backend/deeplab-frontend/src/main/resources/static
+          cp -R frontend/deeplab-web/dist/* backend/deeplab-frontend/src/main/resources/static
 
       - name: Build the backend
         env:
@@ -58,4 +72,10 @@ jobs:
           USERNAME: ${{ github.actor }}
           PASSWORD: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
-        run: mvn -B deploy -DskipTests --settings settings.xml
+        run: mvn -B deploy -DskipTests -f backend/pom.xml --settings settings.xml
+
+      - name: Store the fat jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: application fat jar
+          path: backend/deeplab-application/target/deeplab-application-${{ env.app_version_latest }}.jar
