@@ -7,7 +7,8 @@ image::PepperScreenshot.png[Pepper]
 Pepper is a web application based on  (https://www.eclipse.org/sirius/sirius-web.html[Eclipse Sirius-Web]).
 
 It allows to create data related to your project and represents the data with Gantt, Form and boards like Daily, Kanban or OKR.
-Follow the link for more details link:#functionalities[the functionalities].
+Follow the link for https://github.com/ObeoNetwork/pepper/blob/main/doc/user.adoc[User documentation].
+
 
 This repository is a mono repo containing both frontend and backend components.
 

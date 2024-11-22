@@ -64,6 +64,70 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>io.github.git-commit-id</groupId>
+				<artifactId>git-commit-id-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>get-the-git-infos</id>
+						<goals>
+							<goal>revision</goal>
+						</goals>
+						<phase>initialize</phase>
+					</execution>
+				</executions>
+				<configuration>
+					<generateGitPropertiesFile>false</generateGitPropertiesFile>
+					<injectAllReactorProjects>true</injectAllReactorProjects>
+					<commitIdGenerationMode>full</commitIdGenerationMode>
+					<includeOnlyProperties>
+						<includeOnlyProperty>^git.commit.id.(abbrev|full)$</includeOnlyProperty>
+					</includeOnlyProperties>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.asciidoctor</groupId>
+				<artifactId>asciidoctor-maven-plugin</artifactId>
+				<version>2.2.4</version>
+				<executions>
+					<execution>
+						<id>convert-to-html</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>process-asciidoc</goal>
+						</goals>
+						<configuration>
+							<sourceDirectory>${project.basedir}/../../doc/</sourceDirectory>
+							<outputDirectory>${project.basedir}/src/main/resources/static/doc/</outputDirectory>
+							<preserveDirectories>true</preserveDirectories>
+							<attributes>
+								<toc>left</toc>
+								<icons>font</icons>
+								<source-highlighter>coderay</source-highlighter>
+								<imagesdir>./images</imagesdir>
+								<deeplab-version>${project.version}</deeplab-version>
+								<git-commit-id-abbrev>${git.commit.id.abbrev}</git-commit-id-abbrev>
+							</attributes>
+							<resources>
+								<resource>
+									<!-- (Mandatory) Directory to copy from. Paths are relative to maven's
+										${baseDir} -->
+									<directory>../../doc/images</directory>
+									<!-- (Optional) Directory to copy to. By default uses the option
+										`outputDirectory` -->
+									<targetPath>images</targetPath>
+									<!-- (Optional) If not set, includes all files but default exceptions
+										mentioned -->
+									<includes>
+										<include>**/*.png</include>
+										<include>**/*.svg</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 </project>

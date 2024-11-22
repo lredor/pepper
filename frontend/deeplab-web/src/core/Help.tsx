@@ -15,6 +15,7 @@ import Link from '@mui/material/Link';
 import { emphasize } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 import HelpIcon from '@mui/icons-material/Help';
+import { httpOrigin } from '../core/URL';
 
 const useHelpStyle = makeStyles()((theme) => ({
   onDarkBackground: {
@@ -28,7 +29,7 @@ export const Help = () => {
   const { classes } = useHelpStyle();
   return (
     <Link
-      href="https://github.com/ObeoNetwork/pepper"
+      href={`${httpOrigin}/doc/user.html`}
       rel="noopener noreferrer"
       target="_blank"
       color="inherit"
