@@ -17,6 +17,9 @@ import {
   DiagramRepresentationConfiguration,
   NodeTypeRegistry,
   SiriusWebApplication,
+  navigationBarIconExtensionPoint,
+  footerExtensionPoint,
+  navigationBarMenuIconExtensionPoint,
 } from '@eclipse-sirius/sirius-web-application';
 import { createRoot } from 'react-dom/client';
 import { httpOrigin, wsOrigin } from './core/URL';
@@ -29,13 +32,16 @@ import './fonts.css';
 import './portals.css';
 import './reset.css';
 import './variables.css';
+import { Footer } from './footer/Footer';
+import { Help } from './core/Help';
+import { PepperIcon } from './core/PepperIcon';
 
 if (process.env.NODE_ENV !== 'production') {
   loadDevMessages();
   loadErrorMessages();
 }
 
-const registry = new ExtensionRegistry();
+const extensionRegistry: ExtensionRegistry = new ExtensionRegistry();
 
 const nodeTypeRegistry: NodeTypeRegistry = {
   nodeLayoutHandlers: [new EllipseNodeLayoutHandler()],
@@ -43,10 +49,28 @@ const nodeTypeRegistry: NodeTypeRegistry = {
   nodeTypeContributions: [<NodeTypeContribution component={EllipseNode} type={'ellipseNode'} />],
 };
 
+// Help component contribution
+extensionRegistry.addComponent(navigationBarMenuIconExtensionPoint, {
+  identifier: 'pepper-help',
+  Component: () => <Help />,
+});
+
+// Footer contribution
+extensionRegistry.addComponent(footerExtensionPoint, {
+  identifier: 'pepper-footer',
+  Component: Footer,
+});
+
+// Main icon contribution
+extensionRegistry.addComponent(navigationBarIconExtensionPoint, {
+  identifier: 'pepper_navigationbar#icon',
+  Component: PepperIcon,
+});
+
 const container = document.getElementById('root');
 const root = createRoot(container!);
 root.render(
-  <SiriusWebApplication httpOrigin={httpOrigin} wsOrigin={wsOrigin} extensionRegistry={registry}>
+  <SiriusWebApplication httpOrigin={httpOrigin} wsOrigin={wsOrigin} extensionRegistry={extensionRegistry}>
     <DiagramRepresentationConfiguration nodeTypeRegistry={nodeTypeRegistry} />
   </SiriusWebApplication>
 );
